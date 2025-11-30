@@ -1,0 +1,10 @@
+.sc-chat-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  min-height: 300px;
+  max-height: 500px;
+  overflow-y: auto;
+  background: linear-gradient(180deg, #fff6fc, #e0f8ff);
+  border: 3px solid #a0e6ff;
+}

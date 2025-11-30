@@ -1,0 +1,23 @@
+.sc-option-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.sc-option-button {
+  padding: 10px 16px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  border: 3px solid #a0e6ff;
+  background: linear-gradient(180deg, #fff, #ffeafd);
+  color: #1e3a5f;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.sc-option-button:hover {
+  background: linear-gradient(180deg, #ff9ed6, #ff6fb2);
+  border-color: #8ae4ff;
+  transform: translateY(-2px);
+}

@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* PIXEL FONT */
+.pixel-font {
+  font-family: 'Press Start 2P', monospace !important;
+  image-rendering: pixelated !important;
+  font-size: 12px;
+  letter-spacing: 0.4px;
+}
+
+img, svg, canvas, video, picture {
+  image-rendering: pixelated !important;
+}
+
+/* BODY */
+body {
+  background: linear-gradient(180deg, #fff6fc 0%, #e0f8ff 100%);
+  color: #00c8ff;
+  font-family: 'Press Start 2P', monospace;
+  image-rendering: pixelated;
+  min-height: 100vh;
+}
+
+/* COLORS */
+.pixel-accent {
+  color: #ff4ec9;
+}
+
+.pixel-accent-blue {
+  color: #00c1ff;
+}
+
+/* PIXEL CARD */
+.pixel-card {
+  background: linear-gradient(180deg, #ffffff, #ffeafd);
+  border: 3px solid #a0e6ff;
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.08);
+  padding: 16px;
+  border-radius: 0;
+}
+
+/* PIXEL BG */
+.pixel-bg {
+  background: linear-gradient(180deg, #fff6fc 0%, #e0f8ff 100%);
+}
+
+/* PIXEL BTN */
+.pixel-btn {
+  background: linear-gradient(180deg, #ff9ed6, #ff6fb2);
+  border: 3px solid #8ae4ff;
+  box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.12);
+  color: #001418;
+  font-weight: 700;
+  image-rendering: pixelated;
+  padding: 12px 24px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.pixel-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 rgba(0, 0, 0, 0.15);
+}
+
+/* TITLE GRADIENT */
+.pixel-title,
+.trustclinic-title {
+  background: linear-gradient(45deg, #ff69b4, #00c1ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* CUSTOM CURSOR */
+* {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><rect width='4' height='24' fill='%23ff69b4'/><rect x='4' y='4' width='4' height='4' fill='%23ff69b4'/><rect x='8' y='8' width='4' height='4' fill='%23ff69b4'/><rect x='12' y='12' width='4' height='4' fill='%23ff69b4'/></svg>") 0 0, auto !important;
+}
