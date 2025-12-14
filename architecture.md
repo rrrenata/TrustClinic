@@ -1,5 +1,4 @@
-# Архитектура TrustClinic (по текущему коду)
-
+# Архитектура TrustClinic 
 ## 1) Что это за система
 
 TrustClinic — **клиентское SPA** на React + TypeScript.
