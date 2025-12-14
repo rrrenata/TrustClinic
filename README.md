@@ -114,6 +114,6 @@ npm run build
  ## Регистрация
 ![7](./images/7.png)
  ## Личный кабинет
-
+![8](./images/8.png)
  ## О клинике
->>>>>>> 86dba1f (Lab 8 solution by student 8)
+![9](./images/9.png)
