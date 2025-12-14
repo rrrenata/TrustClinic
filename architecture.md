@@ -1,7 +1,7 @@
 # Архитектура TrustClinic 
 ## 1) Что это за система
 
-TrustClinic — **клиентское SPA** на React + TypeScript.
+TrustClinic — **сайт диагностики** на React + TypeScript.
 
 - Серверной части в репозитории **нет**.
 - Авторизация и «сохранение результатов» реализованы **локально** через `localStorage` / `sessionStorage`.
