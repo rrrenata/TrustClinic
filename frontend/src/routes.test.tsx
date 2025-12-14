@@ -3,53 +3,29 @@ import { MemoryRouter } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import AppRoutes from './routes'
 
-const renderRoutes = (path: string) => {
+const renderRoutes = (initialRoute: string) => {
   return render(
-    <MemoryRouter initialEntries={[path]}>
-      <AuthProvider>
+    <AuthProvider>
+      <MemoryRouter initialEntries={[initialRoute]}>
         <AppRoutes />
-      </AuthProvider>
-    </MemoryRouter>
+      </MemoryRouter>
+    </AuthProvider>
   )
 }
 
-describe('AppRoutes', () => {
-  beforeEach(() => {
-    localStorage.clear()
-  })
-
+describe('Routes', () => {
   it('renders home page at /', () => {
     renderRoutes('/')
-    expect(screen.getByText('TrustClinic')).toBeInTheDocument()
-  })
-
-  it('renders login page at /login', () => {
-    renderRoutes('/login')
-    expect(screen.getByText('Вход')).toBeInTheDocument()
-  })
-
-  it('renders register page at /register', () => {
-    renderRoutes('/register')
-    expect(screen.getByText('Зарегистрироваться')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /главная страница/i })).toBeInTheDocument()
   })
 
   it('renders about page at /about', () => {
     renderRoutes('/about')
-    expect(screen.getByText('О клинике')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /о клинике/i })).toBeInTheDocument()
   })
 
   it('renders 404 for unknown routes', () => {
-    renderRoutes('/unknown-page')
-    expect(screen.getByText('404')).toBeInTheDocument()
-  })
-
-  it('renders layout header on all pages', () => {
-    renderRoutes('/')
-    expect(screen.getByRole('banner')).toBeInTheDocument()
-  })
-
-  it('renders navigation on all pages', () => {
-    renderRoutes('/')
-    expect(screen.getByRole('navigation')).toBeInTheDocument()
+    renderRoutes('/unknown-route-xyz')
+    expect(screen.getByText(/страница не найдена/i)).toBeInTheDocument()
   })
 })

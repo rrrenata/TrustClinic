@@ -10,7 +10,7 @@ export default function HomePage() {
         <div className="pixel-card p-6 mb-6 text-left">
           <h2 className="text-lg pixel-accent-blue mb-4">Описание компонента:</h2>
           <ul className="text-xs pixel-accent-blue space-y-2">
-            <li>• <b>Hero-секция:</b> Логотип TrustClinic, анимированная капсула, заголовок и кнопка &quot;Начать опрос&quot;</li>
+            <li>• <b>Hero-секция:</b> Логотип TrustClinic, заголовок и кнопка &quot;Начать опрос&quot;</li>
             <li>• <b>Секция &quot;Почему TrustClinic?&quot;:</b> 3 карточки (Быстро, Точно, Мило)</li>
             <li>• <b>Секция &quot;Как это работает&quot;:</b> 2 шага с описанием процесса диагностики</li>
             <li>• <b>Секция &quot;Примеры результатов&quot;:</b> 3 примера с процентами риска</li>

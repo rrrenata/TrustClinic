@@ -24,8 +24,6 @@ export { Loader } from './components/Loader'
 export { Modal } from './components/Modal'
 export type { ModalProps } from './components/Modal'
 
-export { Capsule } from './components/Capsule'
-
 // Styles
 import './components/Button/Button.css'
 import './components/Input/Input.css'
@@ -36,4 +34,3 @@ import './components/StepIndicator/StepIndicator.css'
 import './components/TypingIndicator/TypingIndicator.css'
 import './components/Loader/Loader.css'
 import './components/Modal/Modal.css'
-import './components/Capsule/Capsule.css'

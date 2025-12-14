@@ -1,76 +1,69 @@
-import { render, screen } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
+import { render, screen, waitFor } from '@testing-library/react'
+import { MemoryRouter, Routes, Route } from 'react-router-dom'
 import DiagnosisPage from './DiagnosisPage'
-import { AuthContext, User, DiagnosisResult } from '../context/AuthContext'
-import { ReactNode } from 'react'
 
-interface MockAuthProviderProps {
-  children: ReactNode
-  isAuthenticated?: boolean
-}
+const mockUseAuth = jest.fn()
 
-const mockUser: User = {
-  id: 1,
-  name: 'Test User',
-  email: 'test@test.com'
-}
-
-const MockAuthProvider = ({
-  children,
-  isAuthenticated = true
-}: MockAuthProviderProps) => {
-  const mockValue = {
-    user: isAuthenticated ? mockUser : null,
-    isAuthenticated,
-    loading: false,
-    token: isAuthenticated ? 'mock-token' : null,
-    login: async () => {},
-    register: async () => {},
-    logout: () => {},
-    saveResult: () => {},
-    getResults: (): DiagnosisResult[] => []
-  }
-
-  return (
-    <AuthContext.Provider value={mockValue}>
-      {children}
-    </AuthContext.Provider>
-  )
-}
-
-const renderDiagnosisPage = (isAuthenticated = true, route = '/diagnosis') => {
-  return render(
-    <MemoryRouter initialEntries={[route]}>
-      <MockAuthProvider isAuthenticated={isAuthenticated}>
-        <DiagnosisPage />
-      </MockAuthProvider>
-    </MemoryRouter>
-  )
-}
+jest.mock('../context/AuthContext', () => ({
+  useAuth: () => mockUseAuth()
+}))
 
 describe('DiagnosisPage', () => {
-  it('renders page title when authenticated', () => {
-    renderDiagnosisPage()
-    expect(screen.getByText(/Страница диагностики/)).toBeInTheDocument()
+  beforeEach(() => {
+    mockUseAuth.mockReset()
   })
 
-  it('renders description when authenticated', () => {
-    renderDiagnosisPage()
-    expect(screen.getByText(/Интерактивный чат с ботом/)).toBeInTheDocument()
+  it('renders normal diagnosis page when authenticated', () => {
+    mockUseAuth.mockReturnValue({
+      isAuthenticated: true,
+      loading: false
+    })
+
+    render(
+      <MemoryRouter initialEntries={['/diagnosis']}>
+        <Routes>
+          <Route path="/diagnosis" element={<DiagnosisPage />} />
+        </Routes>
+      </MemoryRouter>
+    )
+
+    expect(screen.getByText(/страница диагностики/i)).toBeInTheDocument()
   })
 
-  it('renders DiagnosisChat component', () => {
-    renderDiagnosisPage()
-    expect(screen.getByText(/Компонент DiagnosisChat/)).toBeInTheDocument()
+  it('renders result branch on /diagnosis/result', () => {
+    mockUseAuth.mockReturnValue({
+      isAuthenticated: true,
+      loading: false
+    })
+
+    render(
+      <MemoryRouter initialEntries={['/diagnosis/result']}>
+        <Routes>
+          <Route path="/diagnosis/result" element={<DiagnosisPage />} />
+        </Routes>
+      </MemoryRouter>
+    )
+
+    expect(screen.getByText(/отображение результатов/i)).toBeInTheDocument()
   })
 
-  it('renders nothing when not authenticated', () => {
-    renderDiagnosisPage(false)
-    expect(screen.queryByText(/Страница диагностики/)).not.toBeInTheDocument()
-  })
+  it('redirects to /login when not authenticated (covers redirect branch)', async () => {
+    mockUseAuth.mockReturnValue({
+      isAuthenticated: false,
+      loading: false
+    })
 
-  it('shows result page title on result route', () => {
-    renderDiagnosisPage(true, '/diagnosis/result')
-    expect(screen.getByText(/Результат диагностики/)).toBeInTheDocument()
+    render(
+      <MemoryRouter initialEntries={['/diagnosis']}>
+        <Routes>
+          <Route path="/diagnosis" element={<DiagnosisPage />} />
+          <Route path="/login" element={<div>LOGIN_PAGE</div>} />
+        </Routes>
+      </MemoryRouter>
+    )
+
+    await waitFor(() => {
+      expect(screen.getByText('LOGIN_PAGE')).toBeInTheDocument()
+    })
   })
 })

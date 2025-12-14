@@ -50,8 +50,10 @@ describe('Input', () => {
   })
 
   it('passes through type prop', () => {
-    render(<Input type="password" />)
-    expect(screen.getByRole('textbox').closest('input')).toHaveAttribute('type', 'password')
+    const { container } = render(<Input type="password" />)
+    const input = container.querySelector('input')
+    expect(input).toBeInTheDocument()
+    expect(input).toHaveAttribute('type', 'password')
   })
 
   it('uses provided id', () => {

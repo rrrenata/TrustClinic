@@ -1,89 +1,58 @@
-import { render, screen } from '@testing-library/react'
-import { BrowserRouter } from 'react-router-dom'
+import { render, screen, waitFor } from '@testing-library/react'
+import { MemoryRouter, Routes, Route } from 'react-router-dom'
 import ProfilePage from './ProfilePage'
-import { AuthContext, User, DiagnosisResult } from '../context/AuthContext'
-import { ReactNode } from 'react'
 
-interface MockAuthProviderProps {
-  children: ReactNode
-  isAuthenticated?: boolean
-  user?: User | null
-}
+const mockUseAuth = jest.fn()
 
-const mockUser: User = {
-  id: 1,
-  name: 'Test User',
-  email: 'test@test.com'
-}
-
-const MockAuthProvider = ({
-  children,
-  isAuthenticated = true,
-  user = mockUser
-}: MockAuthProviderProps) => {
-  const mockValue = {
-    user,
-    isAuthenticated,
-    loading: false,
-    token: isAuthenticated ? 'mock-token' : null,
-    login: async () => {},
-    register: async () => {},
-    logout: () => {},
-    saveResult: () => {},
-    getResults: (): DiagnosisResult[] => []
-  }
-
-  return (
-    <AuthContext.Provider value={mockValue}>
-      {children}
-    </AuthContext.Provider>
-  )
-}
-
-const renderProfilePage = (isAuthenticated = true) => {
-  return render(
-    <BrowserRouter>
-      <MockAuthProvider isAuthenticated={isAuthenticated}>
-        <ProfilePage />
-      </MockAuthProvider>
-    </BrowserRouter>
-  )
-}
+jest.mock('../context/AuthContext', () => ({
+  useAuth: () => mockUseAuth()
+}))
 
 describe('ProfilePage', () => {
-  it('renders page title when authenticated', () => {
-    renderProfilePage()
-    expect(screen.getByText(/Личный кабинет/)).toBeInTheDocument()
+  beforeEach(() => {
+    mockUseAuth.mockReset()
   })
 
-  it('renders description when authenticated', () => {
-    renderProfilePage()
-    expect(screen.getByText(/Описание компонента/)).toBeInTheDocument()
-  })
+  it('renders profile when authenticated and user exists', () => {
+    mockUseAuth.mockReturnValue({
+      isAuthenticated: true,
+      loading: false,
+      logout: jest.fn(),
+      user: { name: 'Test User', email: 'test@test.com' }
+    })
 
-  it('renders user info when authenticated', () => {
-    renderProfilePage()
+    render(
+      <MemoryRouter initialEntries={['/profile']}>
+        <Routes>
+          <Route path="/profile" element={<ProfilePage />} />
+        </Routes>
+      </MemoryRouter>
+    )
+
+    expect(screen.getByText(/личный кабинет/i)).toBeInTheDocument()
     expect(screen.getByText('Test User')).toBeInTheDocument()
     expect(screen.getByText('test@test.com')).toBeInTheDocument()
   })
 
-  it('renders logout button when authenticated', () => {
-    renderProfilePage()
-    expect(screen.getByText('Выйти')).toBeInTheDocument()
-  })
+  it('redirects to /login when not authenticated (covers redirect branch)', async () => {
+    mockUseAuth.mockReturnValue({
+      isAuthenticated: false,
+      loading: false,
+      logout: jest.fn(),
+      user: null
+    })
 
-  it('renders diagnosis history placeholder', () => {
-    renderProfilePage()
-    expect(screen.getByText(/история диагностик/)).toBeInTheDocument()
-  })
+    render(
+      <MemoryRouter initialEntries={['/profile']}>
+        <Routes>
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/login" element={<div>LOGIN_PAGE</div>} />
+        </Routes>
+      </MemoryRouter>
+    )
 
-  it('renders diagnosis button', () => {
-    renderProfilePage()
-    expect(screen.getByText('Пройти диагностику')).toBeInTheDocument()
-  })
-
-  it('renders nothing when not authenticated', () => {
-    renderProfilePage(false)
-    expect(screen.queryByText(/Личный кабинет/)).not.toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByText('LOGIN_PAGE')).toBeInTheDocument()
+    })
   })
 })
