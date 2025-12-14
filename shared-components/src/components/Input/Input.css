@@ -1,0 +1,37 @@
+.sc-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.sc-input-label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: #ff4ec9;
+}
+
+.sc-input {
+  padding: 12px 16px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  border: 3px solid #a0e6ff;
+  background: #fff;
+  color: #1e3a5f;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.sc-input:focus {
+  border-color: #ff4ec9;
+}
+
+.sc-input--error {
+  border-color: #ef4444;
+}
+
+.sc-input-error {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: #ef4444;
+}

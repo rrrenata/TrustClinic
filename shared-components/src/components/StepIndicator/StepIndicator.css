@@ -1,0 +1,24 @@
+.sc-step-indicator {
+  margin-bottom: 20px;
+}
+
+.sc-step-text {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: #ff4ec9;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.sc-step-bar {
+  height: 12px;
+  background: #e0f8ff;
+  border: 2px solid #a0e6ff;
+  overflow: hidden;
+}
+
+.sc-step-progress {
+  height: 100%;
+  background: linear-gradient(90deg, #ff9ed6, #ff6fb2);
+  transition: width 0.3s ease;
+}

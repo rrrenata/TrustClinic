@@ -1,0 +1,48 @@
+.sc-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.sc-modal {
+  background: linear-gradient(180deg, #fff6fc, #e0f8ff);
+  border: 4px solid #a0e6ff;
+  padding: 24px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.sc-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.sc-modal-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  color: #ff4ec9;
+  margin: 0;
+}
+
+.sc-modal-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #00c1ff;
+  cursor: pointer;
+}
+
+.sc-modal-content {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  color: #1e3a5f;
+  line-height: 1.6;
+}

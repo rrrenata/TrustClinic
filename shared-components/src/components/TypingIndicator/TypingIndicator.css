@@ -1,0 +1,39 @@
+.sc-typing-indicator {
+  display: flex;
+  gap: 6px;
+  padding: 12px 16px;
+  background: linear-gradient(180deg, #fff, #ffeafd);
+  border: 3px solid #a0e6ff;
+  width: fit-content;
+  margin-bottom: 12px;
+}
+
+.sc-typing-dot {
+  width: 8px;
+  height: 8px;
+  background: #ff4ec9;
+  animation: typing-bounce 1.4s infinite ease-in-out;
+}
+
+.sc-typing-dot:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.sc-typing-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.sc-typing-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typing-bounce {
+  0%, 80%, 100% {
+    transform: scale(0.6);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
