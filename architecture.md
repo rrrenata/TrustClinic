@@ -1,129 +1,194 @@
-# Архитектура проекта TrustClinic
+# Архитектура TrustClinic (по текущему коду)
 
-## Структура проекта
+## 1) Что это за система
 
-Проект состоит из двух модулей:
+TrustClinic — **клиентское SPA** на React + TypeScript.
+
+- Серверной части в репозитории **нет**.
+- Авторизация и «сохранение результатов» реализованы **локально** через `localStorage` / `sessionStorage`.
+- Диагностика — набор фиксированных вопросов в чат‑формате и простое правило расчёта риска.
+
+## 2) Структура репозитория
 
 ```
-Clinic/
-├── frontend/                    # Основное приложение
-│   ├── src/
-│   │   ├── components/          # Компоненты приложения
-│   │   │   ├── DiagnosisChat/   # Чат диагностики
-│   │   │   ├── Layout/          # Общий layout
-│   │   │   └── ResultView/      # Отображение результата
-│   │   ├── context/             # React контексты
-│   │   │   └── AuthContext.tsx  # Контекст авторизации
-│   │   ├── pages/               # Страницы приложения
-│   │   │   ├── HomePage.tsx
-│   │   │   ├── DiagnosisPage.tsx
-│   │   │   ├── ProfilePage.tsx
-│   │   │   ├── LoginPage.tsx
-│   │   │   └── RegisterPage.tsx
-│   │   ├── services/            # Сервисы для работы с API
-│   │   ├── styles/              # Глобальные стили
-│   │   ├── App.tsx
-│   │   ├── routes.tsx
-│   │   └── index.tsx
-│   ├── package.json
-│   ├── tsconfig.json
-│   ├── vite.config.ts
-│   └── eslint.config.js
-│
-├── shared-components/           # Библиотека общих компонентов
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── Button/
-│   │   │   ├── Input/
-│   │   │   ├── ChatBubble/
-│   │   │   ├── ChatContainer/
-│   │   │   ├── OptionButtons/
-│   │   │   ├── StepIndicator/
-│   │   │   ├── TypingIndicator/
-│   │   │   ├── Loader/
-│   │   │   └── Modal/
-│   │   ├── styles/
-│   │   └── index.ts
-│   ├── package.json
-│   ├── tsconfig.json
-│   ├── rollup.config.js
-│   └── eslint.config.js
-│
+TrustClinic/
+├── README.md
 ├── architecture.md
 ├── mvp.md
-└── README.md
+├── frontend/                    # Основное приложение (Vite + React)
+│   ├── package.json
+│   ├── vite.config.ts           # Алиас на shared-components/src + дедуп React
+│   ├── tailwind.config.js
+│   └── src/
+│       ├── App.tsx
+│       ├── routes.tsx           # React Router маршруты
+│       ├── context/
+│       │   └── AuthContext.tsx  # Локальная «авторизация» и хранилище результатов
+│       ├── pages/
+│       │   ├── HomePage.tsx
+│       │   ├── AboutPage.tsx
+│       │   ├── LoginPage.tsx
+│       │   ├── RegisterPage.tsx
+│       │   ├── DiagnosisPage.tsx
+│       │   ├── ProfilePage.tsx
+│       │   └── NotFoundPage.tsx
+│       ├── components/
+│       │   ├── Layout/
+│       │   ├── DiagnosisChat/
+│       │   └── ResultView/
+│       └── styles/
+│           └── globals.css
+│
+└── shared-components/           # Библиотека UI-компонентов (Rollup)
+    ├── package.json
+    ├── rollup.config.js
+    └── src/
+        ├── index.ts
+        └── components/
+            ├── Button/
+            ├── Input/
+            ├── ChatBubble/
+            ├── ChatContainer/
+            ├── OptionButtons/
+            ├── StepIndicator/
+            ├── TypingIndicator/
+            ├── Loader/
+            ├── Modal/
+            └── Capsule/         # 3D-компонент (react-three-fiber + three)
 ```
 
-## Используемые библиотеки
+## 3) Технологический стек 
 
-### Frontend (основное приложение)
+### Frontend (`frontend/`)
 
-| Библиотека | Версия | Назначение |
-|------------|--------|------------|
-| react | ^18.3.1 | UI библиотека |
-| react-dom | ^18.3.1 | DOM рендеринг React |
-| react-router-dom | ^6.28.0 | Маршрутизация |
-| typescript | ^5.6.3 | Типизация |
-| vite | ^5.4.11 | Сборщик |
-| tailwindcss | ^3.4.15 | CSS фреймворк |
-| eslint | ^9.14.0 | Линтер |
-| jest | ^29.7.0 | Тестирование |
-| @testing-library/react | ^16.0.1 | Тестирование React |
+- **React / React DOM:** `^19.2.3`
+- **React Router DOM:** `^7.10.1`
+- **Vite:** `^7.2.7`
+- **TypeScript:** `^5.9.3`
+- **Tailwind CSS:** `^4.1.18` (подключение через `@tailwindcss/vite`)
+- **3D:** `@react-three/fiber ^9.4.2` + `three ^0.182.0`
+- **Тесты:** Jest `^30.2.0` + Testing Library (`@testing-library/react`, `@testing-library/jest-dom`)
 
-### Shared Components (библиотека компонентов)
+### Shared Components (`shared-components/`)
 
-| Библиотека | Версия | Назначение |
-|------------|--------|------------|
-| react | ^18.3.1 | Peer dependency |
-| typescript | ^5.6.3 | Типизация |
-| rollup | ^4.27.3 | Сборка библиотеки |
-| eslint | ^9.14.0 | Линтер |
-| jest | ^29.7.0 | Тестирование |
-| @testing-library/react | ^16.0.1 | Тестирование React |
+- Сборка: **Rollup** `^4.53.3` + `rollup-plugin-postcss`
+- Peer dependencies: `react`, `react-dom`, `@react-three/fiber`, `three` (чтобы не тащить дубли в приложение)
+- Тесты: Jest `^30.2.0` + Testing Library
 
-## Компоненты
+## 4) Рантайм‑архитектура и границы модулей
 
-### Shared Components
+### Роутинг
 
-| Компонент | Назначение |
-|-----------|------------|
-| Button | Универсальная кнопка с вариантами стилей |
-| Input | Поле ввода текста |
-| ChatBubble | Сообщение в чате (от пользователя/бота) |
-| ChatContainer | Контейнер для списка сообщений |
-| OptionButtons | Кнопки выбора ответа |
-| StepIndicator | Индикатор прогресса опроса |
-| TypingIndicator | Анимация набора текста |
-| Loader | Индикатор загрузки |
-| Modal | Модальное окно |
-| Capsule | Анимированная 3D-капсула для главной страницы |
+Роуты объявлены в `frontend/src/routes.tsx`:
 
-### Frontend Components
+- `/` → `HomePage`
+- `/about` → `AboutPage`
+- `/login` → `LoginPage`
+- `/register` → `RegisterPage`
+- `/diagnosis` → `DiagnosisPage` (чат диагностики)
+- `/diagnosis/result` → `DiagnosisPage` (экран результата)
+- `/profile` → `ProfilePage`
+- `*` → `NotFoundPage`
 
-| Компонент | Назначение |
-|-----------|------------|
-| Layout | Общий layout с навигацией |
-| DiagnosisChat | Чат-интерфейс диагностики |
-| ResultView | Отображение результата диагностики |
+Все страницы обёрнуты в общий `Layout` (шапка/навигация) через `<Route element={<Layout/>}>`.
 
-## Структура роутинга
+### Контекст авторизации и данных
 
-| Путь | Страница | Описание |
-|------|----------|----------|
-| `/` | HomePage | Главная страница с описанием сервиса |
-| `/login` | LoginPage | Страница входа |
-| `/register` | RegisterPage | Страница регистрации |
-| `/diagnosis` | DiagnosisPage | Страница с чатом диагностики |
-| `/diagnosis/result` | DiagnosisPage | Результат диагностики |
-| `/profile` | ProfilePage | Личный кабинет пользователя |
-| `/about` | AboutPage | Информация о клинике |
-| `*` | NotFound | Страница 404 |
+`AuthContext` (файл `frontend/src/context/AuthContext.tsx`) — единая точка:
 
-## Авторизация
+- `user`, `token`, `isAuthenticated`, `loading`
+- методы: `login`, `register`, `logout`
+- методы для результатов: `saveResult`, `getResults`
 
-Используется JWT-токен, хранящийся в localStorage. AuthContext предоставляет:
-- `user` — данные пользователя
-- `isAuthenticated` — статус авторизации
-- `login()` — функция входа
-- `logout()` — функция выхода
-- `saveProtectedData()` — отправка защищённых запросов
+Ключевой момент: **логин/регистрация — имитация** (mock), без HTTP-запросов.
+
+### Интеграция `shared-components` в приложении
+
+В `vite.config.ts` настроен алиас:
+
+- `"shared-components" → ../shared-components/src`
+
+и одновременно включён `dedupe` для React, чтобы избежать конфликтов версий при локальной разработке библиотеки.
+
+## 5) Данные и хранение (реальные ключи)
+
+### localStorage
+
+- `authToken` — строка вида `mock-jwt-token-<timestamp>`
+- `authUser` — JSON пользователя `{ id, email, name }`
+- `diagnosisResults` — JSON массива результатов диагностики
+
+### sessionStorage
+
+- `lastResult` — JSON одного результата для экрана `/diagnosis/result`
+
+> Экран результата читает **только** `sessionStorage.lastResult`.  
+> История в профиле берётся из `localStorage.diagnosisResults` и при выборе «Подробнее» выбранный результат записывается в `sessionStorage.lastResult`.
+
+## 6) Подсистема диагностики
+
+### Сценарий
+
+`DiagnosisChat`:
+
+- хранит `step`, `messages`, `answers`
+- показывает вопрос → пользователь выбирает вариант
+- добавляет сообщение пользователя, имитирует «печать» (`TypingIndicator`) и через `700ms` задаёт следующий вопрос
+- после последнего вопроса вызывает `finalizeDiagnosis()`:
+  - считает риск
+  - сохраняет результат в `localStorage` через `saveResult()`
+  - сохраняет `lastResult` в `sessionStorage`
+  - переходит на `/diagnosis/result`
+
+### Вопросы
+
+В коде ровно **10 вопросов**, варианты ответов заданы статически в массиве `questions`.
+
+### Расчёт риска (как реализовано)
+
+Функция `calculateRisk(answers)` использует простые правила:
+
+- если **«затруднённое дыхание = Сильно»** *или* **«боль = Грудь»** → риск `85%`, рекомендация «немедленно обратитесь к врачу»
+- иначе если **«температура = Выше 38»** → риск `55%`, рекомендация «консультация врача»
+- иначе → риск `15%`, рекомендация «отдых и наблюдение»
+
+## 7) Shared UI Components
+
+Компоненты библиотеки (папка `shared-components/src/components`):
+
+- `Button`, `Input`
+- `ChatContainer`, `ChatBubble`
+- `OptionButtons` (кнопки вариантов)
+- `StepIndicator`
+- `TypingIndicator`
+- `Loader`
+- `Modal`
+- `Capsule` (3D, используется на главной странице)
+
+Стили — через локальные `*.css` в каждой папке компонента (и сборка CSS через Rollup).
+
+## 8) Сборка, линт, тесты
+
+### Frontend
+
+Команды (`frontend/package.json`):
+
+- `npm run dev` — запуск Vite dev server
+- `npm run build` — `tsc` + `vite build`
+- `npm run lint` / `lint:fix`
+- `npm run test` / `test:coverage`
+
+Покрытие тестами: глобальный threshold **80%** (branches/functions/lines/statements).
+
+### Shared-components
+
+Команды (`shared-components/package.json`):
+
+- `npm run build` — сборка Rollup в `dist/`
+- `npm run lint` / `lint:fix`
+- `npm run test` / `test:coverage`
+
+Покрытие тестами: глобальный threshold **90%**.
+
+---
+

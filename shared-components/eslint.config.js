@@ -3,6 +3,8 @@ import tseslint from '@typescript-eslint/eslint-plugin'
 import tsparser from '@typescript-eslint/parser'
 import reactPlugin from 'eslint-plugin-react'
 import reactHooksPlugin from 'eslint-plugin-react-hooks'
+import jestPlugin from 'eslint-plugin-jest'
+import globals from 'globals'
 
 export default [
   eslint.configs.recommended,
@@ -13,51 +15,52 @@ export default [
       parserOptions: {
         ecmaVersion: 2020,
         sourceType: 'module',
-        ecmaFeatures: {
-          jsx: true
-        }
+        ecmaFeatures: { jsx: true }
       },
       globals: {
-        React: 'readonly',
-        JSX: 'readonly',
-        console: 'readonly',
-        setTimeout: 'readonly',
-        clearTimeout: 'readonly',
-        window: 'readonly',
-        document: 'readonly',
-        localStorage: 'readonly',
-        sessionStorage: 'readonly',
-        fetch: 'readonly',
-        URL: 'readonly',
-        File: 'readonly',
-        FormData: 'readonly',
-        HTMLInputElement: 'readonly',
-        HTMLButtonElement: 'readonly',
-        HTMLDivElement: 'readonly'
+        ...globals.browser,
+        ...globals.es2021
       }
     },
     plugins: {
       '@typescript-eslint': tseslint,
-      'react': reactPlugin,
+      react: reactPlugin,
       'react-hooks': reactHooksPlugin
     },
     rules: {
-      'indent': ['error', 2],
-      'semi': ['error', 'never'],
+      indent: ['error', 2],
+      semi: ['error', 'never'],
       'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 0 }],
-      'quotes': ['error', 'single'],
+      quotes: ['error', 'single'],
+
+      'no-undef': 'off',
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/explicit-function-return-type': 'off',
+
       'react/react-in-jsx-scope': 'off',
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
+
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }]
     },
     settings: {
-      react: {
-        version: 'detect'
+      react: { version: 'detect' }
+    }
+  },
+
+  {
+    files: ['src/**/*.{test,spec}.{ts,tsx}', 'src/**/__tests__/**/*.{ts,tsx}'],
+    plugins: {
+      jest: jestPlugin
+    },
+    languageOptions: {
+      globals: {
+        ...globals.jest
       }
+    },
+    rules: {
+      ...jestPlugin.configs.recommended.rules
     }
   }
 ]

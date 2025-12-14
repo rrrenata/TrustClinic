@@ -1,47 +1,90 @@
-import { render } from '@testing-library/react'
-
-// Мокаем @react-three/fiber
-jest.mock('@react-three/fiber', () => ({
-  Canvas: ({ children }: { children: React.ReactNode }) => <div data-testid="canvas">{children}</div>,
-  useFrame: jest.fn()
-}))
-
+import { render, fireEvent } from '@testing-library/react'
+import React from 'react'
 import { Capsule } from './Capsule'
 
+const frameCallbacks: Array<() => void> = []
+const useFrameMock = jest.fn((cb: () => void) => {
+  frameCallbacks.push(cb)
+})
+
+jest.mock('@react-three/fiber', () => ({
+  Canvas: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="canvas">{children}</div>
+  ),
+  useFrame: (cb: () => void) => useFrameMock(cb)
+}))
+
 describe('Capsule', () => {
-  it('renders without crashing', () => {
+  beforeEach(() => {
+    frameCallbacks.length = 0
+    useFrameMock.mockClear()
+  })
+
+  it('renders with default size', () => {
     const { container } = render(<Capsule />)
-    expect(container).toBeInTheDocument()
-  })
 
-  it('has container class', () => {
-    render(<Capsule />)
-    const container = document.querySelector('.capsule-container')
-    expect(container).toBeInTheDocument()
-  })
-
-  it('applies default size', () => {
-    render(<Capsule />)
-    const container = document.querySelector('.capsule-container') as HTMLElement
-    expect(container.style.width).toBe('280px')
-    expect(container.style.height).toBe('280px')
+    const wrapper = container.querySelector('.capsule-container') as HTMLElement
+    expect(wrapper).toBeInTheDocument()
+    expect(wrapper.style.width).toBe('280px')
+    expect(wrapper.style.height).toBe('280px')
   })
 
   it('applies custom size', () => {
-    render(<Capsule size={200} />)
-    const container = document.querySelector('.capsule-container') as HTMLElement
-    expect(container.style.width).toBe('200px')
-    expect(container.style.height).toBe('200px')
+    const { container } = render(<Capsule size={400} />)
+
+    const wrapper = container.querySelector('.capsule-container') as HTMLElement
+    expect(wrapper.style.width).toBe('400px')
+    expect(wrapper.style.height).toBe('400px')
   })
 
   it('applies custom style', () => {
-    render(<Capsule style={{ backgroundColor: 'red' }} />)
-    const container = document.querySelector('.capsule-container') as HTMLElement
-    expect(container.style.backgroundColor).toBe('red')
+    const { container } = render(<Capsule style={{ backgroundColor: 'red' }} />)
+
+    const wrapper = container.querySelector('.capsule-container') as HTMLElement
+    expect(wrapper.style.backgroundColor).toBe('red')
   })
 
-  it('renders canvas', () => {
+  it('renders Canvas component', () => {
     const { getByTestId } = render(<Capsule />)
     expect(getByTestId('canvas')).toBeInTheDocument()
+  })
+
+  it('updates pill rotation in the frame callback based on scroll position', () => {
+    const nowSpy = jest.spyOn(Date, 'now').mockReturnValue(1000)
+    Object.defineProperty(window, 'scrollY', {
+      value: 0,
+      writable: true,
+      configurable: true
+    })
+
+    const { container } = render(<Capsule />)
+    window.scrollY = 100
+    fireEvent.scroll(window)
+
+    expect(frameCallbacks.length).toBeGreaterThan(0)
+    const latestFrameCb = frameCallbacks[frameCallbacks.length - 1]
+
+    const groupEl = container.querySelector('group') as unknown as Element & {
+      rotation: { x: number; y: number }
+    }
+    groupEl.rotation = { x: 0, y: 0 }
+
+    latestFrameCb()
+
+    expect(groupEl.rotation.y).toBeCloseTo(0.4, 5)
+    expect(groupEl.rotation.x).toBeCloseTo(Math.sin(1) * 0.1, 5)
+
+    nowSpy.mockRestore()
+  })
+
+  it('does not crash when the frame callback runs after unmount (ref is null)', () => {
+    const { unmount } = render(<Capsule />)
+    expect(frameCallbacks.length).toBeGreaterThan(0)
+
+    const latestFrameCb = frameCallbacks[frameCallbacks.length - 1]
+
+    unmount()
+
+    expect(() => latestFrameCb()).not.toThrow()
   })
 })

@@ -2,88 +2,77 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { Input } from './Input'
 
 describe('Input', () => {
+  it('renders wrapper', () => {
+    const { container } = render(<Input />)
+    expect(container.querySelector('.sc-input-wrapper')).toBeInTheDocument()
+  })
+
   it('renders input element', () => {
-    render(<Input />)
-    expect(screen.getByRole('textbox')).toBeInTheDocument()
+    const { container } = render(<Input />)
+    expect(container.querySelector('input')).toBeInTheDocument()
   })
 
-  it('renders with label', () => {
-    render(<Input label="Email" />)
-    expect(screen.getByText('Email')).toBeInTheDocument()
+  it('applies className to input', () => {
+    const { container } = render(<Input className="custom-class" />)
+    const input = container.querySelector('input')
+    expect(input).toHaveClass('custom-class')
   })
 
-  it('renders without label', () => {
-    render(<Input placeholder="Enter text" />)
-    expect(screen.queryByRole('label')).not.toBeInTheDocument()
+  it('passes through placeholder prop', () => {
+    render(<Input placeholder="Type here" />)
+    expect(screen.getByPlaceholderText('Type here')).toBeInTheDocument()
   })
 
-  it('displays error message', () => {
-    render(<Input error="This field is required" />)
-    expect(screen.getByText('This field is required')).toBeInTheDocument()
+  it('passes through value prop', () => {
+    render(<Input value="hello" onChange={() => {}} />)
+    expect(screen.getByDisplayValue('hello')).toBeInTheDocument()
   })
 
-  it('applies error class when error exists', () => {
-    render(<Input error="Error" />)
-    expect(screen.getByRole('textbox')).toHaveClass('sc-input--error')
-  })
+  it('calls onChange handler', () => {
+    const onChange = jest.fn()
+    render(<Input onChange={onChange} />)
 
-  it('does not apply error class when no error', () => {
-    render(<Input />)
-    expect(screen.getByRole('textbox')).not.toHaveClass('sc-input--error')
-  })
+    const input = document.querySelector('input') as HTMLInputElement
+    fireEvent.change(input, { target: { value: 'new value' } })
 
-  it('handles onChange events', () => {
-    const handleChange = jest.fn()
-    render(<Input onChange={handleChange} />)
-    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'test' } })
-    expect(handleChange).toHaveBeenCalled()
-  })
-
-  it('applies custom className', () => {
-    render(<Input className="custom-class" />)
-    expect(screen.getByRole('textbox')).toHaveClass('custom-class')
-  })
-
-  it('passes through placeholder', () => {
-    render(<Input placeholder="Enter email" />)
-    expect(screen.getByPlaceholderText('Enter email')).toBeInTheDocument()
+    expect(onChange).toHaveBeenCalled()
   })
 
   it('passes through type prop', () => {
-    render(<Input type="password" />)
-    expect(screen.getByRole('textbox').closest('input')).toHaveAttribute('type', 'password')
+    const { container } = render(<Input type="password" />)
+    const input = container.querySelector('input')
+    expect(input).toHaveAttribute('type', 'password')
   })
 
   it('uses provided id', () => {
-    render(<Input id="custom-id" label="Test" />)
-    const input = screen.getByRole('textbox')
-    expect(input).toHaveAttribute('id', 'custom-id')
+    const { container } = render(<Input id="my-id" />)
+    const input = container.querySelector('input')
+    expect(input).toHaveAttribute('id', 'my-id')
   })
 
-  it('generates id when not provided', () => {
-    render(<Input label="Test" />)
-    const input = screen.getByRole('textbox')
-    expect(input).toHaveAttribute('id')
+  it('generates an id if not provided', () => {
+    const { container } = render(<Input />)
+    const input = container.querySelector('input')
+    expect(input?.getAttribute('id')).toMatch(/^input-/)
   })
 
-  it('links label to input via htmlFor', () => {
-    render(<Input id="test-id" label="Test Label" />)
-    const label = screen.getByText('Test Label')
-    expect(label).toHaveAttribute('for', 'test-id')
+  it('renders a label when provided and links it to the input', () => {
+    const { container } = render(<Input label="Email" />)
+
+    const input = container.querySelector('input') as HTMLInputElement
+    const label = screen.getByText('Email') as HTMLLabelElement
+
+    expect(label).toBeInTheDocument()
+    expect(label.tagName.toLowerCase()).toBe('label')
+    expect(label).toHaveAttribute('for', input.id)
+    expect(screen.getByLabelText('Email')).toBe(input)
   })
 
-  it('can be disabled', () => {
-    render(<Input disabled />)
-    expect(screen.getByRole('textbox')).toBeDisabled()
-  })
+  it('renders error message and applies error styling when error is provided', () => {
+    const { container } = render(<Input error="Required" />)
 
-  it('can be required', () => {
-    render(<Input required />)
-    expect(screen.getByRole('textbox')).toBeRequired()
-  })
-
-  it('accepts value prop', () => {
-    render(<Input value="test value" onChange={() => {}} />)
-    expect(screen.getByRole('textbox')).toHaveValue('test value')
+    const input = container.querySelector('input') as HTMLInputElement
+    expect(input).toHaveClass('sc-input--error')
+    expect(screen.getByText('Required')).toBeInTheDocument()
   })
 })

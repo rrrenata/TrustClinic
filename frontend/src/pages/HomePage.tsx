@@ -7,7 +7,18 @@ export default function HomePage() {
       {/* HERO */}
       <section className="pt-32 pb-20 px-6 text-center md:pt-48">
         <div className="max-w-6xl mx-auto">
-          <h1 className="trustclinic-title pixel-font text-4xl md:text-6xl font-bold mb-16">
+          <h1
+            className="
+              font-pixel
+              text-5xl sm:text-6xl md:text-7xl lg:text-8xl
+              leading-none
+              tracking-wide
+              bg-gradient-to-r from-pink-400 via-purple-400 to-cyan-400
+              bg-clip-text text-transparent
+              drop-shadow
+              text-center
+            "
+          >
             TrustClinic
           </h1>
 
