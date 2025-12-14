@@ -8,7 +8,6 @@ export default {
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
 
   moduleNameMapper: {
-    '^@react-three/fiber$': '<rootDir>/mocks/react-three-fiber.tsx',
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy'
   },
 

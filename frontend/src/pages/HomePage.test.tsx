@@ -86,12 +86,6 @@ describe('HomePage', () => {
     expect(screen.getByText('Отзывы пользователей')).toBeInTheDocument()
   })
 
-  it('renders capsule component', () => {
-    renderHomePage()
-    const capsule = document.querySelector('.capsule-container')
-    expect(capsule).toBeInTheDocument()
-  })
-
   it('start button links to register', () => {
     renderHomePage()
     const link = screen.getByText('Начать опрос').closest('a')

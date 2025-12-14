@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Button, Capsule } from 'shared-components'
+import { Button } from 'shared-components'
 
 export default function HomePage() {
   return (
@@ -21,24 +21,6 @@ export default function HomePage() {
           >
             TrustClinic
           </h1>
-
-          {/* Круг с капсулой */}
-          <div className="flex justify-center mb-16">
-            <div className="relative w-72 h-72 md:w-80 md:h-80">
-              <div className="absolute inset-0 rounded-full border-8 border-pink-300 bg-blue-100/20" />
-              <div className="absolute inset-0 rounded-full border-4 border-blue-200/50" />
-              <Capsule
-                size={250}
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)'
-                }}
-              />
-            </div>
-          </div>
-
           <div className="max-w-4xl mx-auto">
             <h2 className="text-xl md:text-2xl pixel-accent mb-6 font-bold">
               Пройди медицинский тест — быстро!
