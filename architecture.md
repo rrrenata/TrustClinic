@@ -1,4 +1,8 @@
 # Архитектура TrustClinic 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 86dba1f (Lab 8 solution by student 8)
 ## 1) Что это за система
 
 TrustClinic — **сайт диагностики** на React + TypeScript.

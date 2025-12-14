@@ -27,7 +27,7 @@ describe('LoginPage', () => {
   it('renders login page', () => {
     renderLogin()
 
-    expect(screen.getByText('Вход')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Вход' })).toBeInTheDocument()
     expect(screen.getByPlaceholderText('email@example.com')).toBeInTheDocument()
     expect(screen.getByPlaceholderText('Минимум 6 символов')).toBeInTheDocument()
   })
@@ -39,13 +39,11 @@ describe('LoginPage', () => {
       target: { value: 'test@test.com' }
     })
     fireEvent.change(screen.getByPlaceholderText('Минимум 6 символов'), {
-      target: { value: '123' } // < 6 → ошибка логина
+      target: { value: '123' }
     })
 
     fireEvent.click(screen.getByRole('button', { name: 'Войти' }))
 
-    expect(
-      await screen.findByText('Неверные данные для входа')
-    ).toBeInTheDocument()
+    expect(await screen.findByText('Неверные данные для входа')).toBeInTheDocument()
   })
 })

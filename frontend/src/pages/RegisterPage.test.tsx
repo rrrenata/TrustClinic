@@ -16,7 +16,7 @@ describe('RegisterPage', () => {
   it('renders register page', () => {
     renderRegister()
 
-    expect(screen.getByText('Регистрация')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Регистрация' })).toBeInTheDocument()
   })
 
   it('shows error on failed register', async () => {
@@ -29,15 +29,11 @@ describe('RegisterPage', () => {
       target: { value: 'test@test.com' }
     })
     fireEvent.change(screen.getByPlaceholderText('Минимум 6 символов'), {
-      target: { value: '123' } // < 6 → ошибка регистрации
+      target: { value: '123' }
     })
 
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Зарегистрироваться' })
-    )
+    fireEvent.click(screen.getByRole('button', { name: 'Зарегистрироваться' }))
 
-    expect(
-      await screen.findByText('Заполните все поля корректно')
-    ).toBeInTheDocument()
+    expect(await screen.findByText('Заполните все поля корректно')).toBeInTheDocument()
   })
 })
