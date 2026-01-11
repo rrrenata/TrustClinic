@@ -1,0 +1,32 @@
+.sc-button {
+  padding: 12px 24px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  border: 3px solid #8ae4ff;
+  background: linear-gradient(180deg, #ff9ed6, #ff6fb2);
+  color: #001418;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.sc-button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.15);
+}
+
+.sc-button:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.sc-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.sc-button--secondary {
+  background: linear-gradient(180deg, #a0e6ff, #7dd3fc);
+  color: #1e3a5f;
+}
